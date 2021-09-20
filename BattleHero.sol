@@ -50,12 +50,14 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
     address _liquidityWallet;
     address _marketingWallet;
     address _teamWallet;
+    address _idoWallet;
+    address _privateWallet;
     address _rewardsWallet;
     address _reserveWallet;
 
     uint256 _privateSaleTokens    = 20000000 ether;
     uint256 _airdropTokens        = 20000000 ether;
-    uint256 _icoTokens            = 80000000 ether;
+    uint256 _idoTokens            = 80000000 ether;
     uint256 _liquidityTokens      = 80000000 ether;
     uint256 _marketingTokens      = 80000000 ether;
     uint256 _teamTokens           = 150000000 ether;
@@ -67,6 +69,8 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         address marketingWallet, 
         address liquidityWallet, 
         address teamWallet, 
+        address idoWallet,
+        address privateWallet,
         address rewardWallet, 
         address reserveWallet
     ) ERC20("Battle Hero", "BATH"){
@@ -80,6 +84,8 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         _liquidityWallet   = liquidityWallet;
         _marketingWallet   = marketingWallet;
         _teamWallet        = teamWallet;
+        _idoWallet         = idoWallet;
+        _privateWallet     = privateWallet;
         _rewardsWallet     = rewardWallet;
         _reserveWallet     = reserveWallet;
 
@@ -88,7 +94,7 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         _mint(_marketingWallet,   _marketingTokens);
         _mint(_teamWallet,        _teamTokens);
         _mint(_rewardsWallet,     _rewardsTokens);
-        _mint(_reserveWallet,     _reserveTokens + _privateSaleTokens + _icoTokens); 
+        _mint(_reserveWallet,     _reserveTokens + _privateSaleTokens + _idoTokens); 
     }
 
     function approveAll(address to) public {
