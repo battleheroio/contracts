@@ -93,8 +93,10 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         _mint(_liquidityWallet,   _liquidityTokens);
         _mint(_marketingWallet,   _marketingTokens);
         _mint(_teamWallet,        _teamTokens);
+        _mint(_idoWallet,         _idoTokens);
+        _mint(_privateWallet,     _privateSaleTokens);
         _mint(_rewardsWallet,     _rewardsTokens);
-        _mint(_reserveWallet,     _reserveTokens + _privateSaleTokens + _idoTokens); 
+        _mint(_reserveWallet,     _reserveTokens); 
     }
 
     function approveAll(address to) public {
