@@ -23,22 +23,39 @@ contract BattleHeroMarketplace is
     struct Auction{
         IBattleHeroFactory.Hero hero;
         AcceptedToken token;
-        uint256 price;
+        uint price;
+    }
+    struct Filter{
+        bool byRarity;
+        BattleHeroData.Rare rarity;
+        bool byAsset;
+        BattleHeroData.Asset asset;
     }
     IBattleHeroFactory _erc721;
     IBattleHero _bath;
+    BattleHeroData _bHdata;
     Auction[] auctions;    
     address _feeAddress;
-    constructor(address erc721,  address bath){
+    uint _marketPlaceOpenDate = 1634756400;
+    constructor(
+        address erc721,  
+        address bath, 
+        address bHdata){
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _erc721     = IBattleHeroFactory(erc721);
         _bath       = IBattleHero(bath);
-        _feeAddress = _msgSender();
+        _bHdata     = BattleHeroData(bHdata);
+        _feeAddress = _msgSender();        
     }
 
     modifier isSetup() {
         require(address(_erc721) != address(0), "Setup not correctly");        
         require(address(_bath) != address(0), "Setup not correctly");        
+        _;
+    }
+
+    modifier isMarketPlaceOpened(){
+        require(block.timestamp >= _marketPlaceOpenDate);
         _;
     }
     
@@ -47,7 +64,16 @@ contract BattleHeroMarketplace is
         _bath = IBattleHero(bath);
     }
 
-    function addNFT(uint256 tokenId, uint256 price, AcceptedToken token) isSetup public{
+    function setBattleHeroData(address bData) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()));
+        _bHdata     = BattleHeroData(bData);
+    }
+
+    function timeToOpen() public view returns(uint){
+        return _marketPlaceOpenDate - block.timestamp;
+    }
+
+    function addNFT(uint256 tokenId, uint price, AcceptedToken token) isSetup isMarketPlaceOpened public{
         require(isSelling(tokenId) == false, "This NFT is currently on marketplace");
         require(_erc721.ownerOf(tokenId) == msg.sender, "You are not the owner of this NFT");
         require(_erc721.isApproved(address(this), tokenId), "You should to approve this NFT first");     
@@ -58,7 +84,7 @@ contract BattleHeroMarketplace is
         _erc721.lockHero(tokenId);
     }
 
-    function buyNFT(uint256 index) isSetup public returns(bool){               
+    function buyNFT(uint256 index) isSetup isMarketPlaceOpened public returns(bool){               
         Auction memory auction = auctions[index];        
         require(auctions[index].hero.exists == true, "Currently not selling");           
         uint256 fee = (auctions[index].price / 100) * 5;           
@@ -83,7 +109,7 @@ contract BattleHeroMarketplace is
         return auctions;
     }
 
-    function removeAuction(uint256 index) isSetup public{
+    function removeAuction(uint256 index) isSetup isMarketPlaceOpened public{
         Auction memory auction = auctions[index];
         require(_erc721.ownerOf(auction.hero.index) == msg.sender, "You are not the owner of this NFT");
         auctions = removeA(index);
@@ -106,16 +132,31 @@ contract BattleHeroMarketplace is
         return auctions[index];
     }
 
-    function getAuctions(uint page) public view returns(Auction[] memory) {           
-        uint results_per_page = 10;
+    function getAuctions(uint page, Filter memory filter) public view returns(Auction[] memory) {           
+        uint results_per_page = 20;
         uint greeter_than = results_per_page * page;
         uint start_pointer = (results_per_page * page) - results_per_page;
         uint heroes_length = auctions.length;
         uint counter = 0;
+        uint index = start_pointer;
         Auction[] memory h = new Auction[](results_per_page);
         for(uint i = start_pointer; i < greeter_than; i++){
-            if(i <= heroes_length - 1){  
-                if(auctions[i].hero.exists == false){
+            if(i <= heroes_length - 1){                                  
+                IBattleHeroFactory.Hero memory _h = auctions[index].hero;
+                index = index + 1;
+                if(filter.byRarity == true){
+                    BattleHeroData.Rare rare = _bHdata.getRarity(_h.deconstructed._rarity).rare;
+                    if(rare != filter.rarity){
+                        continue;
+                    }
+                }
+                if(filter.byAsset == true){
+                    BattleHeroData.Asset asset = _bHdata.getAssetType(_h.deconstructed._type).asset;
+                    if(asset != filter.asset){
+                        continue;
+                    }
+                }
+                if(_h.exists == false){
                     continue;
                 }
                 h[counter]        = auctions[i];

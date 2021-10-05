@@ -19,7 +19,9 @@ contract BattleHeroBreeder is
 
     using Strings for uint256;
 
-    constructor(address genScience, address erc721) {
+    constructor(
+    address genScience, 
+    address erc721) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(BREED_ROLE, _msgSender());        
         setGenScience(genScience);

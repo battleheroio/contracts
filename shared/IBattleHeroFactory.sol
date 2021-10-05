@@ -23,4 +23,5 @@ contract IBattleHeroFactory{
     function lockHero(uint256 tokenId ) public{}
     function unlockHero(uint256 tokenId) public {}
     function isLocked(uint256 tokenId) public view returns(bool) {}
+    function heroesId() public view returns(uint256[] memory){}
 }

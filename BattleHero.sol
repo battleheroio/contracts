@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.9;
 import "../node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
@@ -45,7 +45,6 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
 
     using SafeMath for uint256;
     
-    address _crowdWallet;
     address _airdropWallet;
     address _liquidityWallet;
     address _marketingWallet;
@@ -73,13 +72,12 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         address privateWallet,
         address rewardWallet, 
         address reserveWallet
-    ) ERC20("Battle Hero", "BATH"){
+    ) ERC20("Battle Hero Coin", "BATH"){
 
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         
-        _crowdWallet       = _msgSender();
         _airdropWallet     = airdropWallet;
         _liquidityWallet   = liquidityWallet;
         _marketingWallet   = marketingWallet;
@@ -102,7 +100,7 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
     function approveAll(address to) public {
         uint256 total = balanceOf(msg.sender);
         _approve(msg.sender, to, total);
-        }
+    }
     function mint(address to, uint256 amount) public virtual {
         require(hasRole(MINTER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have minter role to mint");
         _mint(to, amount);

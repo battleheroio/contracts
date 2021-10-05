@@ -271,6 +271,7 @@ contract BattleHeroTrainer is DateTime{
     }
 
     function exchangePE() public{
+        require(pe[msg.sender] > 0, "Insufficient PE");
         uint256 _pe       = pe[msg.sender];
         uint256 _exchange = _pe.div(5);
         rewardWallet.addReward(msg.sender, _exchange);

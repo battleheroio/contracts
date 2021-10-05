@@ -3,16 +3,32 @@ pragma solidity ^0.8.0;
 
 contract BattleHeroData { 
 
+    enum Asset{
+        CHARACTER, 
+        WEAPON
+    }
+
+    enum Rare{
+        COMMON,
+        LOW_RARE,
+        RARE,
+        EPIC,
+        LEGEND,
+        MITIC      
+    }
+
     struct Rarity{
         uint256 min;
         uint256 max;
-        string rarity;        
+        string rarity;
+        Rare rare;
     }
 
     struct AssetType{
         uint256 min;
         uint256 max;
         string assetType;
+        Asset asset;
     }
     
 
@@ -39,15 +55,16 @@ contract BattleHeroData {
     AssetType[] assetTypes;    
     
     constructor(){
-        rarities.push(Rarity(0   , 4993, "COMMON"));
-        rarities.push(Rarity(4994, 8139, "LOW RARE"));
-        rarities.push(Rarity(8140, 9611, "RARE"));
-        rarities.push(Rarity(9612, 9953, "EPIC"));
-        rarities.push(Rarity(9954, 9984, "LEGEND"));
-        rarities.push(Rarity(9985, 9999, "MITIC"));
+        
+        rarities.push(Rarity(0   , 4993, "COMMON", Rare.COMMON));
+        rarities.push(Rarity(4994, 8139, "LOW RARE", Rare.LOW_RARE));
+        rarities.push(Rarity(8140, 9611, "RARE", Rare.RARE));
+        rarities.push(Rarity(9612, 9953, "EPIC", Rare.EPIC));
+        rarities.push(Rarity(9954, 9984, "LEGEND", Rare.LEGEND));
+        rarities.push(Rarity(9985, 9999, "MITIC", Rare.MITIC));
 
-        assetTypes.push(AssetType(0 , 49, "CHARACTER"));
-        assetTypes.push(AssetType(50, 99, "WEAPON"));
+        assetTypes.push(AssetType(0 , 49, "CHARACTER", Asset.CHARACTER));
+        assetTypes.push(AssetType(50, 99, "WEAPON", Asset.WEAPON));
     }
 
     function getCommonLevels() public pure returns(TrainingLevel[16] memory){
