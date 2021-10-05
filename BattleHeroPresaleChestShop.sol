@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-import "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+pragma solidity 0.8.9;
+import "./node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./shared/IBattleHero.sol";
 import "./shared/IBattleHeroGenScience.sol";
 import "./shared/IBattleHeroBreeder.sol";
-import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "./node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract BattleHeroPresaleChestShop is Context, AccessControlEnumerable, Ownable {
 

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
-import "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Context.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
+import "./node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "./node_modules/@openzeppelin/contracts/utils/Context.sol";
+import "./node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "./node_modules/@openzeppelin/contracts/utils/Strings.sol";
 import "./shared/BattleHeroData.sol";
 
 
@@ -93,12 +93,12 @@ contract BattleHeroFactory is
         _bData = BattleHeroData(bData);
     }
     modifier isSetup() {
-        require(address(_bData) != address(0), "Setup not correctly");        
+        require(address(_bData) != address(0), "Setup is not correct");        
         _;
     }
-    function setMinterRole(address breed) public{
+    function setMinterRole(address minter) public{
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Invalid role admin");
-        _setupRole(MINTER_ROLE, breed);        
+        _setupRole(MINTER_ROLE, minter);        
     }
     function setLockerRole(address locker) public{
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Invalid role admin");
@@ -111,12 +111,12 @@ contract BattleHeroFactory is
     }
 
     function lockHero(uint256 tokenId) public{
-        require(hasRole(LOCKER_ROLE, msg.sender), "Your are not locker");
+        require(hasRole(LOCKER_ROLE, msg.sender), "You are not locker");
         lockedHeroes[tokenId] = heroeOfId(tokenId);
     }
 
     function unlockHero(uint256 tokenId) public {
-        require(hasRole(LOCKER_ROLE, msg.sender), "Your are not locker");
+        require(hasRole(LOCKER_ROLE, msg.sender), "You are not locker");
         delete lockedHeroes[tokenId];
     }
     function isLocked(uint256 tokenId) public view returns(bool) {
@@ -211,12 +211,12 @@ contract BattleHeroFactory is
         address from,
         address to,
         uint256 tokenId) internal{
-        require(lockedHeroes[tokenId].exists == false , "Hero can not be transfered cause is locked");
+        require(!lockedHeroes[tokenId].exists , "Hero can not be transferred because it is locked");
         _transferHero(tokenId, from, to);
         _safeTransfer(from, to, tokenId, "");
     }
     function _transferHero(uint256 tokenId,address from, address to) internal{
-        require(_allHeroes[tokenId].deconstructed._transferible < 50, "This hero are not transferible");
+        require(_allHeroes[tokenId].deconstructed._transferible < 50, "This hero is not transferible");
         Hero memory h        = _allHeroes[tokenId];        
         Hero memory newHero  = Hero(to, h.genetic, h.bornAt, h.index, h.exists, h.deconstructed);        
         _allHeroes[tokenId]  = newHero;

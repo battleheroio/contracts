@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.9;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
-import "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Context.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
+import "./node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "./node_modules/@openzeppelin/contracts/utils/Context.sol";
 import "./shared/BattleHeroData.sol";
 import "./shared/IBattleHeroFactory.sol";
 import "./shared/IBattleHero.sol";

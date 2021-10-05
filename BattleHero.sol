@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
-import "../node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
-import "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Context.sol";
-import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import "./node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "./node_modules/@openzeppelin/contracts/utils/Context.sol";
+import "./node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 
 
@@ -73,10 +73,7 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         address rewardWallet, 
         address reserveWallet
     ) ERC20("Battle Hero Coin", "BATH"){
-
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
-        _setupRole(PAUSER_ROLE, _msgSender());
         
         _airdropWallet     = airdropWallet;
         _liquidityWallet   = liquidityWallet;
@@ -115,6 +112,11 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
     }
     function decimals() public view virtual override returns (uint8) {
         return _decimals;
+    }
+    function setMinterRole(address minter) public{
+        require(hasRole(DEFAULT_ADMIN_ROLE , _msgSender()));
+        _setupRole(MINTER_ROLE, minter);
+        _setupRole(PAUSER_ROLE, minter);
     }
     function _beforeTokenTransfer(address from, address to, uint256 amount ) internal virtual override(ERC20, ERC20Pausable) {
         super._beforeTokenTransfer(from, to, amount);

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Context.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./node_modules/@openzeppelin/contracts/utils/Context.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./shared/Whitelist.sol";
 
 
@@ -61,9 +61,9 @@ contract BattleHeroAirdropWallet is Context, Whitelist{
         _usdtInvested[msg.sender] = _usdtInvested[msg.sender].add(amount);
         require(IERC20(BUSD).balanceOf(msg.sender) >= amount, "You dont have sufficient BUSD");
         require(IERC20(BUSD).allowance(msg.sender, address(this)) >= amount, "You dont grant allowance to contract");
-        require(_usdtInvested[msg.sender] <= MAX_ACCEPTED, "You reach max BUSD invest");
+        require(_usdtInvested[msg.sender] <= MAX_ACCEPTED, "You have already deposit a maximum of 3 BNB");
         require(amount >= MIN_ACCEPTED && amount <= MAX_ACCEPTED, "Minimum 0.1 BUSD and maximum 1500 BUSD");        
-        require(block.timestamp >= _saleStarts && block.timestamp <=  _saleEnd, "Airdrop not start or ended");        
+        require(block.timestamp >= _saleStarts && block.timestamp <=  _saleEnd, "Airdrop has not started or ended");        
         uint256 bnb         = amount;
         uint256 tokens      = _getTokenAmount(bnb, tokenPrice());
         _locked[msg.sender] = _locked[msg.sender].add(tokens);
@@ -84,7 +84,7 @@ contract BattleHeroAirdropWallet is Context, Whitelist{
     }
     function claim(address token) public onlyWhitelisted{
         require(block.timestamp >= _firstClaimAvailable, "You can not claim until 20 october 19:00");
-        require(_locked[msg.sender] > 0, "You claim all of your tokens");
+        require(_locked[msg.sender] > 0, "All tokens are already claimed");
         uint256 claimable     = getTokensToClaim(msg.sender) - _claimed[msg.sender];
         _claimed[msg.sender]  = _claimed[msg.sender].add(claimable);  
         _locked[msg.sender]   = _locked[msg.sender].sub(claimable);      
