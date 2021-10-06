@@ -84,9 +84,6 @@ contract BattleHeroFactory is
      */
     constructor(address bData) ERC721("Heroes And Weapons", "HAW") {                
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
-        _setupRole(PAUSER_ROLE, _msgSender());
-        _setupRole(LOCKER_ROLE, _msgSender());
         breedAdmin = msg.sender;
         createdAt = block.timestamp;
         owner = msg.sender;
@@ -98,13 +95,15 @@ contract BattleHeroFactory is
     }
     function setMinterRole(address minter) public{
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Invalid role admin");
+        require(!hasRole(DEFAULT_ADMIN_ROLE, minter), "Invalid role admin");
         _setupRole(MINTER_ROLE, minter);        
+        _setupRole(PAUSER_ROLE, minter);
     }
     function setLockerRole(address locker) public{
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Invalid role admin");
+        require(!hasRole(DEFAULT_ADMIN_ROLE, locker), "Invalid role admin");
         _setupRole(LOCKER_ROLE, locker);        
-    }
-
+    }    
 
     function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;

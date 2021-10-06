@@ -115,6 +115,7 @@ contract BattleHero is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
     }
     function setMinterRole(address minter) public{
         require(hasRole(DEFAULT_ADMIN_ROLE , _msgSender()));
+        require(!hasRole(DEFAULT_ADMIN_ROLE, minter));
         _setupRole(MINTER_ROLE, minter);
         _setupRole(PAUSER_ROLE, minter);
     }
