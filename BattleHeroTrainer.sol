@@ -41,9 +41,9 @@ contract BattleHeroTrainer is Initializable {
         address _battleHeroPEAddress,
         address _battleHeroAddress
     ) public initializer { 
-        MIN_SLOTS         = 3;
+        MIN_SLOTS         = 6;
         MAX_SLOTS         = 30;
-        SLOT_PRICE        = 500000000000000000;
+        SLOT_PRICE        = 1500 ether;
         TRAINING_DURATION = 1 days;
         _owner = msg.sender;
         setBattleHeroData(_battleHeroDataAddress);  
