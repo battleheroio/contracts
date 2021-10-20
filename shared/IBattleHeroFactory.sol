@@ -11,11 +11,11 @@ contract IBattleHeroFactory{
         bool exists;
         BattleHeroData.DeconstructedGen deconstructed;
     }
-    function transferFrom(address from, address buyer, uint256 numTokens) public{}
+    function transferFrom(address from, address buyer, uint256 tokenId) public{}
     function balanceOf(address tokenOwner) public view returns (uint256) {}
     function burn(uint256 _value) public{}
     function allowance(address from, address delegate) public view returns (uint) {}
-    function burnFrom(address from, uint256 numTokens) public returns (bool) {}
+    function burnFrom(address from, uint256 tokenId) public returns (bool) {}
     function heroeOfId(uint256 tokenId) public view returns(Hero memory) { }
     function ownerOf(uint256 tokenId) public view virtual returns (address) { }
     function mint(address to, string memory genes) public virtual returns(uint){ }

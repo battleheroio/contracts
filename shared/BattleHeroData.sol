@@ -1,5 +1,6 @@
 pragma solidity 0.8.9;
 
+import "./IBattleHeroFactory.sol";
 
 contract BattleHeroData { 
 
@@ -69,121 +70,121 @@ contract BattleHeroData {
 
     function getCommonLevels() public pure returns(TrainingLevel[16] memory){
         TrainingLevel[16] memory _levels;
-        _levels[1] = TrainingLevel(0  , 331,  1, 15);          
-        _levels[2] = TrainingLevel(332, 664,  2, 15);
-        _levels[3] = TrainingLevel(665, 997,  3, 15);
-        _levels[4] = TrainingLevel(998, 1330, 4, 15);
-        _levels[5] = TrainingLevel(1331, 1663, 5, 15);
-        _levels[6] = TrainingLevel(1664, 1996, 6, 15);
-        _levels[7] = TrainingLevel(1997, 2329, 7, 15);
-        _levels[8] = TrainingLevel(2330, 2662, 8, 15);
-        _levels[9] = TrainingLevel(2663, 2995, 9, 15);
-        _levels[10] = TrainingLevel(2996, 3328, 10, 15);
-        _levels[11] = TrainingLevel(3329, 3661, 11, 15);
-        _levels[12] = TrainingLevel(3662, 3994, 12, 15);
-        _levels[13] = TrainingLevel(3995, 4327, 13, 15);
-        _levels[14] = TrainingLevel(4328, 4660, 14, 15);
-        _levels[15] = TrainingLevel(4661, 4993, 15, 15);
+        _levels[1] = TrainingLevel(0  , 331,  1, 90);          
+        _levels[2] = TrainingLevel(332, 664,  2, 90);
+        _levels[3] = TrainingLevel(665, 997,  3, 90);
+        _levels[4] = TrainingLevel(998, 1330, 4, 90);
+        _levels[5] = TrainingLevel(1331, 1663, 5, 90);
+        _levels[6] = TrainingLevel(1664, 1996, 6, 90);
+        _levels[7] = TrainingLevel(1997, 2329, 7, 90);
+        _levels[8] = TrainingLevel(2330, 2662, 8, 90);
+        _levels[9] = TrainingLevel(2663, 2995, 9, 90);
+        _levels[10] = TrainingLevel(2996, 3328, 10, 90);
+        _levels[11] = TrainingLevel(3329, 3661, 11, 90);
+        _levels[12] = TrainingLevel(3662, 3994, 12, 90);
+        _levels[13] = TrainingLevel(3995, 4327, 13, 90);
+        _levels[14] = TrainingLevel(4328, 4660, 14, 90);
+        _levels[15] = TrainingLevel(4661, 4993, 15, 90);
         return _levels;
     }
 
     function getLowRareLevels() public pure returns(TrainingLevel[16] memory){
         TrainingLevel[16] memory _levels;
-        _levels[1] = TrainingLevel(4994, 5199, 16, 30);
-        _levels[2] = TrainingLevel(5200, 5409, 17, 30);
-        _levels[3] = TrainingLevel(5410, 5619, 18, 30);
-        _levels[4] = TrainingLevel(5620, 5829, 19, 30);
-        _levels[5] = TrainingLevel(5830, 6039, 20, 30);
-        _levels[6] = TrainingLevel(6040, 6249, 21, 30);
-        _levels[7] = TrainingLevel(6250, 6459, 22, 30);
-        _levels[8] = TrainingLevel(6460, 6669, 23, 30);
-        _levels[9] = TrainingLevel(6670, 6879, 24, 30);
-        _levels[10] = TrainingLevel(6880, 7089, 25, 30);
-        _levels[11] = TrainingLevel(7090, 7299, 26, 30);
-        _levels[12] = TrainingLevel(7300, 7509, 27, 30);
-        _levels[13] = TrainingLevel(7510, 7719, 28, 30);
-        _levels[14] = TrainingLevel(7720, 7929, 29, 30);
-        _levels[15] = TrainingLevel(7930, 8139, 30, 30);
+        _levels[1] = TrainingLevel(4994, 5199, 16, 180);
+        _levels[2] = TrainingLevel(5200, 5409, 17, 180);
+        _levels[3] = TrainingLevel(5410, 5619, 18, 180);
+        _levels[4] = TrainingLevel(5620, 5829, 19, 180);
+        _levels[5] = TrainingLevel(5830, 6039, 20, 180);
+        _levels[6] = TrainingLevel(6040, 6249, 21, 180);
+        _levels[7] = TrainingLevel(6250, 6459, 22, 180);
+        _levels[8] = TrainingLevel(6460, 6669, 23, 180);
+        _levels[9] = TrainingLevel(6670, 6879, 24, 180);
+        _levels[10] = TrainingLevel(6880, 7089, 25, 180);
+        _levels[11] = TrainingLevel(7090, 7299, 26, 180);
+        _levels[12] = TrainingLevel(7300, 7509, 27, 180);
+        _levels[13] = TrainingLevel(7510, 7719, 28, 180);
+        _levels[14] = TrainingLevel(7720, 7929, 29, 180);
+        _levels[15] = TrainingLevel(7930, 8139, 30, 180);
         return _levels;
     }
 
     function getRareLevels() public pure returns(TrainingLevel[16] memory){
         TrainingLevel[16] memory _levels;
-        _levels[1] = TrainingLevel(8140, 8225, 31, 35);
-        _levels[2] = TrainingLevel(8226, 8324, 32, 35);
-        _levels[3] = TrainingLevel(8325, 8423, 33, 35);
-        _levels[4] = TrainingLevel(8424, 8522, 34, 35);
-        _levels[5] = TrainingLevel(8523, 8621, 35, 35);
-        _levels[6] = TrainingLevel(8622, 8720, 36, 35);
-        _levels[7] = TrainingLevel(8721, 8819, 37, 35);
-        _levels[8] = TrainingLevel(8820, 8918, 38, 35);
-        _levels[9] = TrainingLevel(8919, 9017, 39, 35);
-        _levels[10] = TrainingLevel(9018, 9116, 40, 35);
-        _levels[11] = TrainingLevel(9117, 9215, 41, 35);
-        _levels[12] = TrainingLevel(9216, 9314, 42, 35);
-        _levels[13] = TrainingLevel(9315, 9413, 43, 35);
-        _levels[14] = TrainingLevel(9414, 9512, 44, 35);
-        _levels[15] = TrainingLevel(9513, 9611, 45, 35);
+        _levels[1] = TrainingLevel(8140, 8225, 31, 210);
+        _levels[2] = TrainingLevel(8226, 8324, 32, 210);
+        _levels[3] = TrainingLevel(8325, 8423, 33, 210);
+        _levels[4] = TrainingLevel(8424, 8522, 34, 210);
+        _levels[5] = TrainingLevel(8523, 8621, 35, 210);
+        _levels[6] = TrainingLevel(8622, 8720, 36, 210);
+        _levels[7] = TrainingLevel(8721, 8819, 37, 210);
+        _levels[8] = TrainingLevel(8820, 8918, 38, 210);
+        _levels[9] = TrainingLevel(8919, 9017, 39, 210);
+        _levels[10] = TrainingLevel(9018, 9116, 40, 210);
+        _levels[11] = TrainingLevel(9117, 9215, 41, 210);
+        _levels[12] = TrainingLevel(9216, 9314, 42, 210);
+        _levels[13] = TrainingLevel(9315, 9413, 43, 210);
+        _levels[14] = TrainingLevel(9414, 9512, 44, 210);
+        _levels[15] = TrainingLevel(9513, 9611, 45, 210);
         return _levels;
     }
 
     function getEpicLevels() public pure returns(TrainingLevel[16] memory){
         TrainingLevel[16] memory _levels;
-        _levels[1] = TrainingLevel(9612, 9631, 46, 40);
-        _levels[2] = TrainingLevel(9632, 9654, 47, 40);
-        _levels[3] = TrainingLevel(9655, 9677, 48, 40);
-        _levels[4] = TrainingLevel(9678, 9700, 49, 40);
-        _levels[5] = TrainingLevel(9701, 9723, 50, 40);
-        _levels[6] = TrainingLevel(9724, 9746, 51, 40);
-        _levels[7] = TrainingLevel(9747, 9769, 52, 40);
-        _levels[8] = TrainingLevel(9770, 9792, 53, 40);
-        _levels[9] = TrainingLevel(9793, 9815, 54, 40);
-        _levels[10] = TrainingLevel(9816, 9838, 55, 40);
-        _levels[11] = TrainingLevel(9839, 9861, 56, 40);
-        _levels[12] = TrainingLevel(9862, 9884, 57, 40);
-        _levels[13] = TrainingLevel(9885, 9907, 58, 40);
-        _levels[14] = TrainingLevel(9908, 9930, 59, 40);
-        _levels[15] = TrainingLevel(9931, 9953, 60, 40);
+        _levels[1] = TrainingLevel(9612, 9631, 46, 240);
+        _levels[2] = TrainingLevel(9632, 9654, 47, 240);
+        _levels[3] = TrainingLevel(9655, 9677, 48, 240);
+        _levels[4] = TrainingLevel(9678, 9700, 49, 240);
+        _levels[5] = TrainingLevel(9701, 9723, 50, 240);
+        _levels[6] = TrainingLevel(9724, 9746, 51, 240);
+        _levels[7] = TrainingLevel(9747, 9769, 52, 240);
+        _levels[8] = TrainingLevel(9770, 9792, 53, 240);
+        _levels[9] = TrainingLevel(9793, 9815, 54, 240);
+        _levels[10] = TrainingLevel(9816, 9838, 55, 240);
+        _levels[11] = TrainingLevel(9839, 9861, 56, 240);
+        _levels[12] = TrainingLevel(9862, 9884, 57, 240);
+        _levels[13] = TrainingLevel(9885, 9907, 58, 240);
+        _levels[14] = TrainingLevel(9908, 9930, 59, 240);
+        _levels[15] = TrainingLevel(9931, 9953, 60, 240);
         return _levels;
     }
 
     function getLegendLevels() public pure returns(TrainingLevel[16] memory){
         TrainingLevel[16] memory _levels;
-        _levels[1] = TrainingLevel(9954, 9956, 61, 70);
-        _levels[2] = TrainingLevel(9957, 9958, 62, 70);
-        _levels[3] = TrainingLevel(9959, 9960, 63, 70);
-        _levels[4] = TrainingLevel(9961, 9962, 64, 70);
-        _levels[5] = TrainingLevel(9963, 9964, 65, 70);
-        _levels[6] = TrainingLevel(9965, 9966, 66, 70);
-        _levels[7] = TrainingLevel(9967, 9968, 67, 70);
-        _levels[8] = TrainingLevel(9969, 9970, 68, 70);
-        _levels[9] = TrainingLevel(9971, 9972, 69, 70);
-        _levels[10] = TrainingLevel(9973, 9974, 70, 70);
-        _levels[11] = TrainingLevel(9975, 9976, 71, 70);
-        _levels[12] = TrainingLevel(9977, 9978, 72, 70);
-        _levels[13] = TrainingLevel(9979, 9980, 73, 70);
-        _levels[14] = TrainingLevel(9981, 9982, 74, 70);
-        _levels[15] = TrainingLevel(9983, 9984, 75, 70);
+        _levels[1] = TrainingLevel(9954, 9956, 61, 420);
+        _levels[2] = TrainingLevel(9957, 9958, 62, 420);
+        _levels[3] = TrainingLevel(9959, 9960, 63, 420);
+        _levels[4] = TrainingLevel(9961, 9962, 64, 420);
+        _levels[5] = TrainingLevel(9963, 9964, 65, 420);
+        _levels[6] = TrainingLevel(9965, 9966, 66, 420);
+        _levels[7] = TrainingLevel(9967, 9968, 67, 420);
+        _levels[8] = TrainingLevel(9969, 9970, 68, 420);
+        _levels[9] = TrainingLevel(9971, 9972, 69, 420);
+        _levels[10] = TrainingLevel(9973, 9974, 70, 420);
+        _levels[11] = TrainingLevel(9975, 9976, 71, 420);
+        _levels[12] = TrainingLevel(9977, 9978, 72, 420);
+        _levels[13] = TrainingLevel(9979, 9980, 73, 420);
+        _levels[14] = TrainingLevel(9981, 9982, 74, 420);
+        _levels[15] = TrainingLevel(9983, 9984, 75, 420);
         return _levels;
     }
 
     function getMiticLevels() public pure returns(TrainingLevel[16] memory){
         TrainingLevel[16] memory _levels;
-        _levels[1] = TrainingLevel(9985, 9985, 76, 120);
-        _levels[2] = TrainingLevel(9986, 9986, 77, 120);
-        _levels[3] = TrainingLevel(9987, 9987, 78, 120);
-        _levels[4] = TrainingLevel(9988, 9988, 79, 120);
-        _levels[5] = TrainingLevel(9989, 9989, 80, 120);
-        _levels[6] = TrainingLevel(9990, 9990, 81, 120);
-        _levels[7] = TrainingLevel(9991, 9991, 82, 120);
-        _levels[8] = TrainingLevel(9992, 9992, 83, 120);
-        _levels[9] = TrainingLevel(9993, 9993, 84, 120);
-        _levels[10] = TrainingLevel(9994, 9994, 85, 120);
-        _levels[11] = TrainingLevel(9995, 9995, 86, 120);
-        _levels[12] = TrainingLevel(9996, 9996, 87, 120);
-        _levels[13] = TrainingLevel(9997, 9997, 88, 120);
-        _levels[14] = TrainingLevel(9998, 9998, 89, 120);
-        _levels[15] = TrainingLevel(9999, 9999, 90, 120);
+        _levels[1]  = TrainingLevel(9985, 9985, 76, 600);
+        _levels[2]  = TrainingLevel(9986, 9986, 77, 600);
+        _levels[3]  = TrainingLevel(9987, 9987, 78, 600);
+        _levels[4]  = TrainingLevel(9988, 9988, 79, 600);
+        _levels[5]  = TrainingLevel(9989, 9989, 80, 600);
+        _levels[6]  = TrainingLevel(9990, 9990, 81, 600);
+        _levels[7]  = TrainingLevel(9991, 9991, 82, 600);
+        _levels[8]  = TrainingLevel(9992, 9992, 83, 600);
+        _levels[9]  = TrainingLevel(9993, 9993, 84, 600);
+        _levels[10] = TrainingLevel(9994, 9994, 85, 600);
+        _levels[11] = TrainingLevel(9995, 9995, 86, 600);
+        _levels[12] = TrainingLevel(9996, 9996, 87, 600);
+        _levels[13] = TrainingLevel(9997, 9997, 88, 600);
+        _levels[14] = TrainingLevel(9998, 9998, 89, 600);
+        _levels[15] = TrainingLevel(9999, 9999, 90, 600);
         return _levels;
     }
     
@@ -221,11 +222,12 @@ contract BattleHeroData {
     function getTrainingLevel(uint256 gen) public view returns(TrainingLevel memory){
         TrainingLevel memory trainingLevelSelected;
         Rarity memory rarity = getRarity(gen);
+        TrainingLevel[16] memory _levels = getLevels(rarity);
         for(uint256 i = 1; i <= 15; i++){
-            TrainingLevel memory _trainingLevel = getLevels(rarity)[i];
-             if(gen >= _trainingLevel.min && gen <= _trainingLevel.max){
-                 trainingLevelSelected = _trainingLevel;
-             }
+            TrainingLevel memory _trainingLevel = _levels[i];
+            if(gen >= _trainingLevel.min && gen <= _trainingLevel.max){
+                trainingLevelSelected = _trainingLevel;
+            }
         }
         return trainingLevelSelected;
     }
@@ -261,13 +263,14 @@ contract BattleHeroData {
         // Rarity
         string memory _rarity = slice(bytes(gen), bytes(gen).length - 8, 4);
         
-        string memory _transferible   = slice(bytes(gen), bytes(gen).length - 12, 2);
+        string memory _transferible  = slice(bytes(gen), bytes(gen).length - 12, 2);
         
         string memory _stat = slice(bytes(gen), bytes(gen).length - 14, 2);
         
         return DeconstructedGen(parseInt(_type), parseInt(_asset), parseInt(_rarity), parseInt(_stat), parseInt(_transferible));
     }
-
+    
+ 
     function parseInt(string memory _a)
         public
         pure

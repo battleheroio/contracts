@@ -1,6 +1,6 @@
 pragma solidity 0.8.9;
 
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title Whitelist
@@ -14,7 +14,7 @@ contract Whitelist is Ownable {
   event WhitelistedAddressRemoved(address addr);
 
   modifier onlyWhitelisted() {
-    require(whitelist[msg.sender]);
+    require(whitelist[msg.sender], "Your are not whitelisted");
     _;
   }
 

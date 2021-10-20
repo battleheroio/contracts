@@ -1,112 +1,121 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
-import "./node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./shared/IBattleHero.sol";
 import "./shared/IBattleHeroGenScience.sol";
 import "./shared/IBattleHeroBreeder.sol";
-import "./node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "../node_modules/@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
+import "../node_modules/@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
-contract BattleHeroChestShop is Context, AccessControlEnumerable {
+contract BattleHeroChestShop is ContextUpgradeable, AccessControlEnumerableUpgradeable {
 
-    IBattleHero _erc20;
-    IBattleHeroGenScience _genScience;
-    IBattleHeroBreeder _breeder;
+    uint256 public CHARACTER_CHEST;
+    uint256 public WEAPON_CHEST;
+    uint256 public MIX_CHEST;
 
-    using SafeMath for uint256;
+    using SafeMathUpgradeable for uint256;
 
-    bytes32 public constant ECOSYSTEM_ROLE = keccak256("ECOSYSTEM_ROLE");
-    enum ChestType {
-        CHARACTER,
-        WEAPON,
-        MIX
-    }
-    enum ChestRarity {
-        COMMON,
-        LOW_RARE,
-        RARE,
-        EPIC,
-        LEGEND,
-        MITIC,
-        RANDOM
-    }
+    mapping(address => mapping(uint256 => uint256)) _balances;
+    mapping(uint256 => uint256) _prices;
 
-    struct Chest{
-        ChestType chestType;
-        ChestRarity chestRarity;
-        bool opened;
-        uint index;
-        uint when;
-    }
-    mapping(ChestType => uint) _prices;
-    mapping(address => Chest[]) _buyed;    
+    IBattleHero _battleHero;
+    IBattleHeroBreeder _battleHeroBreeder;
+    IBattleHeroGenScience _battleHeroGenScience;
 
-    event ChestOpened(uint index, address from,uint when, uint[] tokenIds);
+    address _battleHeroBurnWallet;
 
-    constructor(
-        address erc20address,
-        address genScience,
-        address breeder
-    ) {
-        _setupRole(ECOSYSTEM_ROLE, _msgSender());
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _erc20        = IBattleHero(erc20address);
-        _genScience   = IBattleHeroGenScience(genScience);
-        _breeder      = IBattleHeroBreeder(breeder);
+    event ChestPurchased(address who, uint256 chestId, uint256 when);
+    event ChestOpened(address who, uint256 chestId, uint256[] tokenIds, uint256 when);
+
+    function initialize(
+        address _battleHeroContractAddress,
+        address _battleHeroBreederContractAddress, 
+        address _battleHeroGenScienceContractAddress,
+        address _battleHeroBurnWalletAddress
+    ) public initializer { 
         
-        _prices[ChestType.CHARACTER] = 2000 ether;
-        _prices[ChestType.WEAPON]    = 2000 ether;         
-        _prices[ChestType.MIX]       = 3000 ether; 
+        __Context_init();
+        __AccessControlEnumerable_init();
+
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        
+        CHARACTER_CHEST = 0;
+        WEAPON_CHEST    = 1;
+        MIX_CHEST       = 2;
+        
+        setBattleHero(_battleHeroContractAddress);
+        setBattleHeroBreeder(_battleHeroBreederContractAddress);
+        setBattleHeroGenScience(_battleHeroGenScienceContractAddress);
+
+        _battleHeroBurnWallet    = _battleHeroBurnWalletAddress;
+        _prices[CHARACTER_CHEST] = 900 ether;
+        _prices[WEAPON_CHEST]    = 900 ether;
+        _prices[MIX_CHEST]       = 1440 ether;
     }
 
-    modifier isSetup() {
-        require(address(_erc20) != address(0), "Setup not correctly");
-        require(address(_genScience) != address(0), "Setup not correctly");
-        require(address(_breeder) != address(0), "Setup not correctly");
-        _;
+    function setBattleHero(address _battleHeroContractAddress) public {
+        _battleHero = IBattleHero(_battleHeroContractAddress);
+    }
+    
+    function setBattleHeroBreeder(address _battleHeroBreederContractAddress) public {
+        _battleHeroBreeder = IBattleHeroBreeder(_battleHeroBreederContractAddress);
     }
 
-    function setERC20(address erc20) public {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "You dont have role"
-        );
-        _erc20 = IBattleHero(erc20);
+    function setBattleHeroGenScience(address _battleHeroGenScienceContractAddress) public {
+        _battleHeroGenScience = IBattleHeroGenScience(_battleHeroGenScienceContractAddress);
     }
 
-    function setGenScience(address genScience) public {
-        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()));
-        _genScience = IBattleHeroGenScience(genScience);
+    function balanceOf(address owner, uint256 chestId) public view returns(uint256){
+        return _balances[owner][chestId];
     }
-
-    function setBreeder(address breeder) public {
-        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()));
-        _breeder = IBattleHeroBreeder(breeder);
+    function purchase(uint256 _chestId) public virtual{
+        uint256 _amount = 1;
+        uint256 _calculatedPrice = _prices[_chestId] * _amount;
+        require(_battleHero.balanceOf(msg.sender) >= _calculatedPrice, "Insufficient balance");
+        require(_battleHero.allowance(msg.sender, address(this)) >= _calculatedPrice, "Insufficient allowance");
+        _balances[msg.sender][_chestId] = _balances[msg.sender][_chestId].add(_amount);
+        _battleHero.transferFrom(msg.sender, _battleHeroBurnWallet, _calculatedPrice);
+        emit ChestPurchased(msg.sender, _chestId, block.timestamp);
     }
-
-    function buy(ChestType chestType) external {
-        require(_erc20.balanceOf(msg.sender) >= _prices[chestType], "Insufficient BATH");
-        _buyed[msg.sender].push(Chest(chestType, ChestRarity.RANDOM, false, _buyed[msg.sender].length, block.timestamp));
-        _erc20.burnFrom(msg.sender, _prices[chestType]);
+    function purchase(uint256 _chestId, uint256 _amount) public virtual{
+        uint256 _calculatedPrice = _prices[_chestId] * _amount;
+        require(_battleHero.balanceOf(msg.sender) >= _calculatedPrice, "Insufficient balance");
+        require(_battleHero.allowance(msg.sender, address(this)) >= _calculatedPrice, "Insufficient allowance");
+        _balances[msg.sender][_chestId] = _balances[msg.sender][_chestId].add(_amount);
+        _battleHero.transferFrom(msg.sender, _battleHeroBurnWallet, _calculatedPrice);
+        emit ChestPurchased(msg.sender, _chestId, block.timestamp);
     }
-    function open(uint index) public {
-        Chest memory chest = _buyed[msg.sender][index];
-        uint[] memory ids = new uint[](2);           
-        require(chest.opened == false, "Chest is currently opened");
-        require(chest.chestRarity == ChestRarity.RANDOM, "Invalid chest on presale");    
-        require(chest.when > 0, "Invalid chest");
-        if (chest.chestType == ChestType.WEAPON) {
-            string memory weapon = _genScience.generateWeapon();
-            ids[0] = _breeder.breed(msg.sender, weapon);
-            emit ChestOpened(index, msg.sender, block.timestamp, ids);
+    function open(uint256 _chestId) public virtual{        
+        require(_balances[msg.sender][_chestId] >= 1, "You should to buy more chests");        
+        _openChest(_chestId);        
+    }
+    function open(uint256 _chestId, uint256 _amount) public virtual{        
+        require(_balances[msg.sender][_chestId] >= _amount, "You should to buy more chests");        
+        for(uint i = 0; i < _amount; i++){
+            _openChest(_chestId);
         }
-        if (chest.chestType == ChestType.CHARACTER) {
-            string memory character = _genScience.generateCharacter();
-            ids[0] = _breeder.breed(msg.sender, character);
-            emit ChestOpened(index, msg.sender, block.timestamp, ids);
+    }
+
+    function _openChest(uint256 _chestId) internal {
+        uint256[] memory _tokenIds = new uint256[](2);
+        if(_chestId == 0){
+            string memory _genCharacter = _battleHeroGenScience.generateCharacter();
+            uint256 _characterId = _battleHeroBreeder.breed(msg.sender, _genCharacter);
+            _tokenIds[0] = _characterId;
         }
-        _buyed[msg.sender][index].opened = true;
-    }  
-
-
-
+        if(_chestId == 1){
+            string memory _genWeapon = _battleHeroGenScience.generateWeapon();
+            uint256 _weaponId = _battleHeroBreeder.breed(msg.sender, _genWeapon);
+            _tokenIds[1] = _weaponId;
+        }
+        if(_chestId == 2){
+            string memory _genCharacter = _battleHeroGenScience.generateCharacter();
+            string memory _genWeapon = _battleHeroGenScience.generateWeapon();
+            uint256 _characterId = _battleHeroBreeder.breed(msg.sender, _genCharacter);
+            uint256 _weaponId    = _battleHeroBreeder.breed(msg.sender, _genWeapon);
+            _tokenIds[0] = _characterId;
+            _tokenIds[1] = _weaponId;
+        }
+        _balances[msg.sender][_chestId] = _balances[msg.sender][_chestId].sub(1);
+        emit ChestOpened(msg.sender, _chestId, _tokenIds, block.timestamp);
+    }
 }

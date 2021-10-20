@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
-import "./node_modules/@openzeppelin/contracts/utils/Strings.sol";
-import "./node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
+import "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./shared/IBattleHeroFactory.sol";
 import "./shared/IBattleHero.sol";
 import "./shared/IBattleHeroGenScience.sol";
@@ -45,12 +45,12 @@ contract BattleHeroBreeder is
         _setupRole(BREED_ROLE, breeder);
     }
     function breed(address to, string memory gen) isSetup public returns(uint)  {        
-        require(hasRole(BREED_ROLE, _msgSender()), "Invalid role");
+        require(hasRole(BREED_ROLE, _msgSender()), "Invalid role for breed");
         uint tokenId = _erc721factory.mint(to, gen);
         return tokenId;
     }
     function breedRandom() isSetup public returns (uint){
-        require(hasRole(BREED_ROLE, _msgSender()), "Invalid role");
+        require(hasRole(BREED_ROLE, _msgSender()), "Invalid role for breed random");
         string memory randomGen = _genScience.generate();
         return breed(msg.sender, randomGen);    
     }
